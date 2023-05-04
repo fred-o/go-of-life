@@ -1,11 +1,7 @@
-package life
+package board
 
 import (
-	"bytes"
-	"fmt"
-	"math"
 	"math/rand"
-	"os"
 )
 
 type Board struct {
@@ -68,37 +64,6 @@ func (b *Board) Iterate() *Board {
 		}
 	}
 	return i
-}
-
-func (b *Board) Print() {
-	u := b.ToBuffer(b.width, b.height)
-	_, err := u.WriteTo(os.Stdout)
-	if err != nil {
-		panic(fmt.Errorf("could not print board: %w", err))
-	}
-}
-
-func (b *Board) ToBuffer(width int, height int) bytes.Buffer {
-	var u bytes.Buffer
-	w := int(math.Min(float64(width), float64(b.width)))
-	h := int(math.Min(float64(height), float64(b.height)))
-
-	for y := 0; y < h; y++ {
-		u.WriteString("\033[K") // Clear the line
-		if y > 0 {
-			u.WriteString("\r\n")
-		}
-		for x := 0; x < w; x++ {
-			if b.State(x, y) {
-				u.WriteString("\033[97m*")
-			} else {
-				u.WriteString("\033[30m·")
-			}
-		}
-	}
-	u.WriteString("\033[0m") // Reset color
-
-	return u
 }
 
 func btoi(b bool) int {

@@ -5,18 +5,20 @@ import (
 	"os"
 	"time"
 
-	"appelberg.me/m/life/life"
+	"appelberg.me/m/life/board"
 	"golang.org/x/term"
 )
 
 func main() {
 	w, h, err := term.GetSize(int(os.Stdin.Fd()))
 	if err != nil {
-		panic( fmt.Errorf("could not get term size: %w", err))
+		panic(fmt.Errorf("could not get term size: %w", err))
 	}
-	b := life.NewBoard(w, h)
+
+	b := board.NewBoard(w, h)
 	b.Init(time.Now().UnixNano())
-	life.Animate(b, life.AnimationOpts{
-		Delay: 100,	
+
+	board.Animate(b, board.AnimationOpts{
+		Delay: 100,
 	})
 }
