@@ -47,6 +47,10 @@ func TestIterate(t *testing.T) {
 
 func TestToBuffer(t *testing.T) {
 	b := NewBoard(4, 3)
-	u := b.ToBuffer()
-	assert.Equal(t, u.Len(), 28)
+	u := b.ToBuffer(4, 3)
+	assert.Equal(t, u.Len(), 101)
+	u = b.ToBuffer(2, 2)
+	assert.Equal(t, u.Len(), 40)
+	u = b.ToBuffer(10, 10)
+	assert.Equal(t, u.Len(), 101)
 }
