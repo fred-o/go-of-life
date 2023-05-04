@@ -41,8 +41,12 @@ func TestIterate(t *testing.T) {
 	b1 := NewBoard(4, 3)
 	b1.Init(23)
 	b2 := b1.Iterate()
-	b2.Print()
 	assert.Equal(t, b2.State(0, 0), false)
 	assert.Equal(t, b2.State(1, 0), false)
 }
 
+func TestToBuffer(t *testing.T) {
+	b := NewBoard(4, 3)
+	u := b.ToBuffer()
+	assert.Equal(t, u.Len(), 28)
+}

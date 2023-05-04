@@ -1,8 +1,10 @@
 package life
 
 import (
+	"bytes"
 	"fmt"
 	"math/rand"
+	"os"
 )
 
 type Board struct {
@@ -68,16 +70,30 @@ func (b *Board) Iterate() *Board {
 }
 
 func (b *Board) Print() {
+	u := b.ToBuffer()
+	_, err := u.WriteTo(os.Stdout)
+	if err != nil {
+		panic(fmt.Errorf("could not print board: %w", err))
+	}
+}
+
+func (b *Board) ToBuffer() bytes.Buffer {
+	var u bytes.Buffer
+
 	for y := 0; y < b.height; y++ {
+		if y > 0 {
+			u.WriteString("\r\n")
+		}
 		for x := 0; x < b.width; x++ {
 			if b.State(x, y) {
-				fmt.Print("*")
+				u.WriteString("*")
 			} else {
-				fmt.Print("·")
+				u.WriteString("·")
 			}
 		}
-		fmt.Println()
 	}
+
+	return u
 }
 
 func btoi(b bool) int {

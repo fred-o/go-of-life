@@ -14,7 +14,7 @@ func main() {
 	if err != nil {
 		panic( fmt.Errorf("could not get term size: %w", err))
 	}
-	b := life.NewBoard(w, h-1)
+	b := life.NewBoard(w, h)
 	b.Init(time.Now().UnixNano())
 	life.Animate(b, life.AnimationOpts{
 		Delay: 100,	
