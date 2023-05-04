@@ -1,6 +1,7 @@
 package life
 
 import (
+	"fmt"
 	"math/rand"
 )
 
@@ -11,9 +12,9 @@ type Board struct {
 }
 
 func NewBoard(width int, height int) *Board {
-	f := make([][]bool, height)
-	for i := 0; i < height; i++ {
-		f[i] = make([]bool, width)
+	f := make([][]bool, width)
+	for x := 0; x < width; x++ {
+		f[x] = make([]bool, height)
 	}
 	b := Board{width, height, f}
 	return &b
@@ -44,15 +45,39 @@ func (b *Board) Neighbours(x int, y int) int {
 
 func (b *Board) Init(seed int64) {
 	r := rand.New(rand.NewSource(seed))
-	for x := 0; x < b.width; x++ {
-		for y := 0; y < b.height; y++ {
+	for y := 0; y < b.height; y++ {
+		for x := 0; x < b.width; x++ {
 			b.flags[x][y] = r.Intn(2) == 1
 		}
 	}
 }
 
 func (b *Board) Iterate() *Board {
-	return b
+	i := NewBoard(b.width, b.height)
+	for y := 0; y < b.height; y++ {
+		for x := 0; x < b.width; x++ {
+			n := b.Neighbours(x, y)
+			if n == 2 {
+				i.flags[x][y] = b.State(x, y)
+			} else if n == 3 {
+				i.flags[x][y] = true
+			}
+		}
+	}
+	return i
+}
+
+func (b *Board) Print() {
+	for y := 0; y < b.height; y++ {
+		for x := 0; x < b.width; x++ {
+			if b.State(x, y) {
+				fmt.Print("*")
+			} else {
+				fmt.Print("·")
+			}
+		}
+		fmt.Println()
+	}
 }
 
 func btoi(b bool) int {
