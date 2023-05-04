@@ -7,15 +7,20 @@ import (
 type Board struct {
 	width  int
 	height int
-	flags  [][]bool
+	curr   *[][]bool
+	next   *[][]bool
 }
 
 func NewBoard(width int, height int) *Board {
-	f := make([][]bool, width)
+	curr := make([][]bool, width)
 	for x := 0; x < width; x++ {
-		f[x] = make([]bool, height)
+		curr[x] = make([]bool, height)
 	}
-	b := Board{width, height, f}
+	next := make([][]bool, width)
+	for x := 0; x < width; x++ {
+		next[x] = make([]bool, height)
+	}
+	b := Board{width, height, &curr, &next}
 	return &b
 }
 
@@ -26,7 +31,7 @@ func (b *Board) State(x int, y int) bool {
 	if x >= b.width || y >= b.height {
 		return false
 	}
-	return b.flags[x][y]
+	return (*b.curr)[x][y]
 }
 
 func (b *Board) Neighbours(x int, y int) int {
@@ -46,24 +51,25 @@ func (b *Board) Init(seed int64) {
 	r := rand.New(rand.NewSource(seed))
 	for y := 0; y < b.height; y++ {
 		for x := 0; x < b.width; x++ {
-			b.flags[x][y] = r.Intn(2) == 1
+			(*b.curr)[x][y] = r.Intn(2) == 1
 		}
 	}
 }
 
-func (b *Board) Iterate() *Board {
-	i := NewBoard(b.width, b.height)
+func (b *Board) Iterate() {
 	for y := 0; y < b.height; y++ {
 		for x := 0; x < b.width; x++ {
 			n := b.Neighbours(x, y)
 			if n == 2 {
-				i.flags[x][y] = b.State(x, y)
+				(*b.next)[x][y] = b.State(x, y)
 			} else if n == 3 {
-				i.flags[x][y] = true
+				(*b.next)[x][y] = true
+			} else {
+				(*b.next)[x][y] = false
 			}
 		}
 	}
-	return i
+	b.curr, b.next = b.next, b.curr
 }
 
 func btoi(b bool) int {

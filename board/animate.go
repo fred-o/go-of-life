@@ -30,7 +30,7 @@ func Animate(b *Board, opts AnimationOpts) {
 		if err != nil {
 			panic(fmt.Errorf("could not write: %w", err))
 		}
-		b = b.Iterate()
+		b.Iterate()
 		time.Sleep(opts.Delay * time.Millisecond)
 	}
 
@@ -56,7 +56,7 @@ func (b *Board) ToBuffer(width int, height int) bytes.Buffer {
 		}
 		for x := 0; x < w; x++ {
 			if b.State(x, y) {
-				u.WriteString("\033[97m*")
+				u.WriteString("\033[97m×")
 			} else {
 				u.WriteString("\033[30m·")
 			}
