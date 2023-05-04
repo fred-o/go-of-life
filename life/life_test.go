@@ -29,3 +29,10 @@ func TestBoardNeighbours(t *testing.T) {
 	assert.Equal(t, b.Neighbours(1, 0), 2)
 	assert.Equal(t, b.Neighbours(1, 1), 1)
 }
+
+func TestBoardIni(t *testing.T) {
+	b := NewBoard(3, 3)
+	b.Init(23)
+	assert.Equal(t, b.State(0, 0), true)
+	assert.Equal(t, b.State(1, 0), false)
+}

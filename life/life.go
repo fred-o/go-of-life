@@ -1,5 +1,9 @@
 package life
 
+import (
+	"math/rand"
+)
+
 type Board struct {
 	width  int
 	height int
@@ -27,17 +31,24 @@ func (b *Board) State(x int, y int) bool {
 
 func (b *Board) Neighbours(x int, y int) int {
 	c := 0
-	c += btoi(b.State(x - 1, y - 1))
-	c += btoi(b.State(x, y - 1))
-	c += btoi(b.State(x + 1, y - 1))
-
-	c += btoi(b.State(x - 1, y))
-	c += btoi(b.State(x + 1, y))
-
-	c += btoi(b.State(x - 1, y + 1))
-	c += btoi(b.State(x, y + 1))
-	c += btoi(b.State(x + 1, y + 1))
+	c += btoi(b.State(x-1, y-1))
+	c += btoi(b.State(x, y-1))
+	c += btoi(b.State(x+1, y-1))
+	c += btoi(b.State(x-1, y))
+	c += btoi(b.State(x+1, y))
+	c += btoi(b.State(x-1, y+1))
+	c += btoi(b.State(x, y+1))
+	c += btoi(b.State(x+1, y+1))
 	return c
+}
+
+func (b *Board) Init(seed int64) {
+	r := rand.New(rand.NewSource(seed))
+	for x := 0; x < b.width; x++ {
+		for y := 0; y < b.height; y++ {
+			b.flags[x][y] = r.Intn(2) == 1
+		}
+	}
 }
 
 func (b *Board) Iterate() *Board {
