@@ -1,19 +1,22 @@
 package main
 
 import (
-	"bufio"
+	"fmt"
 	"os"
+	"time"
 
 	"appelberg.me/m/life/life"
+	"golang.org/x/term"
 )
 
 func main() {
-	reader := bufio.NewReader(os.Stdin)
-	b := life.NewBoard(48, 32)
-	b.Init(23)
-	for ;; {
-		b.Print()
-		b = b.Iterate()
-		_, _, _ = reader.ReadRune()
+	w, h, err := term.GetSize(int(os.Stdin.Fd()))
+	if err != nil {
+		panic( fmt.Errorf("could not get term size: %w", err))
 	}
+	b := life.NewBoard(w, h-1)
+	b.Init(time.Now().UnixNano())
+	life.Animate(b, life.AnimationOpts{
+		Delay: 100,	
+	})
 }
