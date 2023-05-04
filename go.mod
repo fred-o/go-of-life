@@ -1,4 +1,4 @@
-module appelberg.me/m/life
+module github.com/fred-o/go-of-life
 
 go 1.20
 

@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"appelberg.me/m/life/board"
+	"github.com/fred-o/go-of-life/board"
 	"golang.org/x/term"
 )
 
