@@ -8,8 +8,8 @@ import (
 
 func TestNewBoard(t *testing.T) {
 	b := NewBoard(48, 32)
-	assert.Equal(t, b.width, 48)
-	assert.Equal(t, b.height, 32)
+	assert.Equal(t, b.Width, 48)
+	assert.Equal(t, b.Height, 32)
 }
 
 func TestBoardState(t *testing.T) {
@@ -43,14 +43,4 @@ func TestIterate(t *testing.T) {
 	b.Iterate()
 	assert.Equal(t, b.State(0, 0), false)
 	assert.Equal(t, b.State(1, 0), false)
-}
-
-func TestToBuffer(t *testing.T) {
-	b := NewBoard(4, 3)
-	u := b.ToBuffer(4, 3)
-	assert.Equal(t, u.Len(), 101)
-	u = b.ToBuffer(2, 2)
-	assert.Equal(t, u.Len(), 40)
-	u = b.ToBuffer(10, 10)
-	assert.Equal(t, u.Len(), 101)
 }

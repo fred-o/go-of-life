@@ -1,4 +1,4 @@
-package board
+package ui
 
 import (
 	"bytes"
@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/fred-o/go-of-life/board"
 	"golang.org/x/term"
 )
 
@@ -18,36 +19,29 @@ func resetPosition() {
 	fmt.Printf("\033[%d;%dH", 0, 0)
 }
 
-func Animate(b *Board, opts AnimationOpts) {
+func Animate(b *board.Board, opts AnimationOpts) {
 	for {
 		resetPosition()
 		w, h, err := term.GetSize(int(os.Stdout.Fd()))
 		if err != nil {
 			panic(fmt.Errorf("could not get term size: %w", err))
 		}
-		u := b.ToBuffer(w, h)
-		_, err = u.WriteTo(os.Stdout)
-		if err != nil {
-			panic(fmt.Errorf("could not write: %w", err))
-		}
+		r := Render(b, w, h)
+		r.Draw()
 		b.Iterate()
 		time.Sleep(opts.Delay * time.Millisecond)
 	}
 
 }
 
-func (b *Board) Print() {
-	u := b.ToBuffer(b.width, b.height)
-	_, err := u.WriteTo(os.Stdout)
-	if err != nil {
-		panic(fmt.Errorf("could not print board: %w", err))
-	}
+type Rendered struct {
+	buf bytes.Buffer
 }
 
-func (b *Board) ToBuffer(width int, height int) bytes.Buffer {
+func Render(b *board.Board, width int, height int) *Rendered {
 	var u bytes.Buffer
-	w := int(math.Min(float64(width), float64(b.width)))
-	h := int(math.Min(float64(height), float64(b.height)))
+	w := int(math.Min(float64(width), float64(b.Width)))
+	h := int(math.Min(float64(height), float64(b.Height)))
 
 	for y := 0; y < h; y++ {
 		u.WriteString("\033[K") // Clear the line
@@ -64,6 +58,12 @@ func (b *Board) ToBuffer(width int, height int) bytes.Buffer {
 	}
 	u.WriteString("\033[0m") // Reset color
 
-	return u
+	return &Rendered{u}
 }
 
+func (r *Rendered) Draw() {
+	_, err := r.buf.WriteTo(os.Stdout)
+	if err != nil {
+		panic(fmt.Errorf("could not write: %w", err))
+	}
+}

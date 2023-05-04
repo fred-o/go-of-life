@@ -5,8 +5,8 @@ import (
 )
 
 type Board struct {
-	width  int
-	height int
+	Width  int
+	Height int
 	curr   *[][]bool
 	next   *[][]bool
 }
@@ -28,7 +28,7 @@ func (b *Board) State(x int, y int) bool {
 	if x < 0 || y < 0 {
 		return false
 	}
-	if x >= b.width || y >= b.height {
+	if x >= b.Width || y >= b.Height {
 		return false
 	}
 	return (*b.curr)[x][y]
@@ -49,16 +49,16 @@ func (b *Board) Neighbours(x int, y int) int {
 
 func (b *Board) Init(seed int64) {
 	r := rand.New(rand.NewSource(seed))
-	for y := 0; y < b.height; y++ {
-		for x := 0; x < b.width; x++ {
+	for y := 0; y < b.Height; y++ {
+		for x := 0; x < b.Width; x++ {
 			(*b.curr)[x][y] = r.Intn(2) == 1
 		}
 	}
 }
 
 func (b *Board) Iterate() {
-	for y := 0; y < b.height; y++ {
-		for x := 0; x < b.width; x++ {
+	for y := 0; y < b.Height; y++ {
+		for x := 0; x < b.Width; x++ {
 			n := b.Neighbours(x, y)
 			if n == 2 {
 				(*b.next)[x][y] = b.State(x, y)
